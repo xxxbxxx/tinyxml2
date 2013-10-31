@@ -1613,6 +1613,17 @@ XMLUnknown* XMLDocument::NewUnknown( const char* str )
     return unk;
 }
 
+void XMLDocument::DeleteNode( XMLNode* node )
+{
+    if (node->_parent) {
+        node->_parent->DeleteChild( node );
+    } 
+    else {
+        TIXMLASSERT( node->_document == this );
+        node->_memPool->SetTracked();
+        DELETE_NODE( node );
+    }
+}
 
 XMLError XMLDocument::LoadFile( const char* filename )
 {
